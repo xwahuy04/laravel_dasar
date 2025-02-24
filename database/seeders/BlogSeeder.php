@@ -23,7 +23,7 @@ class BlogSeeder extends Seeder
         DB::table('blogs')->truncate();
         
         Blog::factory()
-        ->count(10)
+        ->count(30)
         ->create();
     }
 }
