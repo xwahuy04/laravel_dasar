@@ -10,12 +10,21 @@
 <body>
 
     <div class="container">
-        <h1 class="text-center">Blog List</h1>
         <div class="mt-5">
+            <h1 class="text-center">Blog List</h1>
 
+            
             <div class="table-responsive mt-5">
 
-                <form method="GET">
+                <a href="{{ route('blog.add') }}" class="btn btn-primary mb-4">Add New</a>
+
+                @if(Session::has('message'))
+                    <p class="alert alert-success">{{ Session::get('message') }}
+
+                    </p>
+                @endif
+
+                <form method="GET" action="{{ route('blog') }}">
                     <div class="input-group mb-3">
                         {{-- $title dari file controler --}}
                         <input type="text" name="title" value="{{ $title }}" class="form-control" placeholder="Search Title" aria-label="Search title" aria-describedby="button-addon2">
@@ -42,7 +51,7 @@
                                 {{-- loop 123 $loop->iteration --}}
                                 <td>{{ ($blogs ->currentpage()-1) * $blogs ->perpage() + $loop->index + 1 }}</td>
                                 <td>{{ $blog->title }}</td>
-                                <td>edit | delete</td>
+                                <td><a href="{{ route('blog.show', ['id' => $blog->id]) }}" class="btn btn-link">view</a>| <a href="{{ route('blog.edit', ['id' => $blog->id]) }}">edit</a> | <a href="{{ route('blog.delete', ['id' => $blog->id]) }}">delete</a></td>
                             </tr>
                         @endforeach
                     </tbody>
