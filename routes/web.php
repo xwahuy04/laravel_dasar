@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\PhoneController;
+use App\Http\Controllers\UserController;
+use App\Models\Phone;
 
 Route::get('/', function () {
     return view('welcome');
@@ -43,3 +46,8 @@ Route::get('/blog/{id}/detail', [BlogController::class, 'show'])->name('blog.sho
 Route::get('/blog/{id}/edit', [BlogController::class, 'edit'])->name('blog.edit');
 Route::patch('/blog/{id}/update', [BlogController::class, 'update'])->name('blog.update');
 Route::get('/blog/{id}/delete', [BlogController::class, 'delete'])->name('blog.delete');
+
+
+Route::get('/users', [UserController::class, 'index']); 
+Route::get('/phones', [PhoneController::class, 'index']); 
+
