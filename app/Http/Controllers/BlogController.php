@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
@@ -11,14 +12,21 @@ class BlogController extends Controller
 {
     public function index(Request $request)
     {
+        // query builder
+
         // search
-        $title = $request->title;
+        // $title = $request->title;
 
         // panngil tabel blogs
-        $blogs = DB::table('blogs')->where('title', 'LIKE' , '%'.$title.'%')->orderBy('id', 'desc')->paginate(10);
+        // $blogs = DB::table('blogs')->where('title', 'LIKE' , '%'.$title.'%')->orderBy('id', 'desc')->paginate(10);
 
         // blogs dipanggil di view blog
-        return view('blog', ['blogs' => $blogs, 'title' => $title]);
+        // return view('blog', ['blogs' => $blogs, 'title' => $title]);
+
+        // model
+         $title = $request->title;
+         $blogs = Blog::where('title', 'LIKE' , '%'.$title.'%')->orderBy('id', 'desc')->paginate(10);
+         return view('blog', ['blogs' => $blogs, 'title' => $title]);
     }
 
 
@@ -38,10 +46,13 @@ class BlogController extends Controller
 
 
         // query builder
-        DB::table('blogs')->insert([
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+        // DB::table('blogs')->insert([
+        //     'title' => $request->title,
+        //     'description' => $request->description,
+        // ]);
+
+        // model
+        Blog::create([$request->all()]);
 
         Session::flash('message', 'New Blog Succesfuly Added!'); 
 
@@ -50,22 +61,17 @@ class BlogController extends Controller
 
     public function show($id)
     {
-        $blog = DB::table('blogs')->where('id', $id)->first();
+        // $blog = DB::table('blogs')->where('id', $id)->first();
 
-        if(!$blog){
-            abort(404);
-        }
+        // model
+        $blog = Blog::findOrFail($id);
 
         return view('blog-detail', ['blog' => $blog]);
     }
 
     public function edit($id)
     {
-        $blog = DB::table('blogs')->where('id', $id)->first();
-
-        if(!$blog){
-            abort(404);
-        }
+        $blog = Blog::findOrFail($id);
 
         return view('blog-edit', ['blog' => $blog]);
     }
@@ -78,10 +84,10 @@ class BlogController extends Controller
             'description' => ['required'],
         ]);
 
-        DB::table('blogs')->where('id', $id)->update([
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
+        // model
+        $blog = Blog::findOrFail($id);
+        $blog->update($request->all());
+        
         Session::flash('message', 'New Blog Succesfuly Update!'); 
 
         return redirect()->route('blog');
@@ -89,7 +95,7 @@ class BlogController extends Controller
 
     public function delete($id)
     {
-        $blog = DB::table('blogs')->where('id', $id)->delete();
+        Blog::findOrFail($id)->delete();
 
         Session::flash('message', 'New Blog Succesfuly Deleted!'); 
 
